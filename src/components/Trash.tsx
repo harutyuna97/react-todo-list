@@ -33,7 +33,7 @@ function Trash() {
     return (
         <div className='container mt-5'>
             <h2 className='my-3'>Removed todos</h2>
-            <Table columns={columns} dataSource={deletedTodos} rowKey='id'></Table>
+            <Table pagination={false} scroll={{ x: 400 }} columns={columns} dataSource={deletedTodos} rowKey='id'></Table>
         </div>
     )
 }

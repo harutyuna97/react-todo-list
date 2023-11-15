@@ -3,7 +3,7 @@ import {ColumnsType} from "antd/es/table";
 import {ITodo} from "../models";
 import {useAppDispatch, useAppSelector} from "../hooks/stateHook";
 import {Link} from "react-router-dom";
-import {deleteTodo} from "../reducers/TodoReducer";
+import {completeTodo, deleteTodo} from "../reducers/TodoReducer";
 import {addDeletedTodo} from "../reducers/DeletedTodoReducer";
 import {DeleteOutlined} from "@ant-design/icons";
 
@@ -12,7 +12,7 @@ function Home() {
     const dispatch = useAppDispatch();
 
     const actionsStyles = {
-        width: "140px",
+        width: "fit-content",
     };
 
     const todoList = useAppSelector((state) => state.todos)
@@ -20,6 +20,10 @@ function Home() {
     const handleDelete = (todo: ITodo) => {
         dispatch(addDeletedTodo(todo))
         dispatch(deleteTodo({id: todo.id}))
+    }
+
+    const handleMarkAsComplete = (todo: ITodo) => {
+        dispatch(completeTodo(todo))
     }
 
     const columns: ColumnsType<ITodo> = [
@@ -50,11 +54,12 @@ function Home() {
             render: (text, record) => {
                 return (
                     <div>
-                        <div style={actionsStyles} className='d-flex justify-content-between'>
+                        <div style={actionsStyles} className='d-flex justify-content-between gap-2'>
                             <Link to={`/edit/${record.id}`}>
                                 <Button type='primary'>Edit</Button>
                             </Link>
                             <Button onClick={() => handleDelete(record)} type='primary' danger>Delete</Button>
+                            {record.status !== 'COMPLETED' && record.status !== 'OVERDUE' && <Button onClick={() => handleMarkAsComplete(record)} type='default'>Mark as Complete</Button>}
                         </div>
                     </div>
                 )
@@ -70,7 +75,7 @@ function Home() {
                     Create +
                 </Button>
             </Link>
-            <Table columns={columns} dataSource={todoList} rowKey='id'></Table>
+            <Table pagination={false} scroll={{ x: 400 }} columns={columns} dataSource={todoList} rowKey='id'></Table>
             <Link to='/trash'>
                 <Button
                     className='mt-3'
