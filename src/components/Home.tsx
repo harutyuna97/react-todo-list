@@ -4,6 +4,8 @@ import {ITodo} from "../models";
 import {useAppDispatch, useAppSelector} from "../hooks/stateHook";
 import {Link} from "react-router-dom";
 import {deleteTodo} from "../reducers/TodoReducer";
+import {addDeletedTodo} from "../reducers/DeletedTodoReducer";
+import {DeleteOutlined} from "@ant-design/icons";
 
 function Home() {
 
@@ -15,8 +17,9 @@ function Home() {
 
     const todoList = useAppSelector((state) => state.todos)
 
-    const handleDelete = (id: number) => {
-        dispatch(deleteTodo({id}))
+    const handleDelete = (todo: ITodo) => {
+        dispatch(addDeletedTodo(todo))
+        dispatch(deleteTodo({id: todo.id}))
     }
 
     const columns: ColumnsType<ITodo> = [
@@ -51,7 +54,7 @@ function Home() {
                             <Link to={`/edit/${record.id}`}>
                                 <Button type='primary'>Edit</Button>
                             </Link>
-                            <Button onClick={() => handleDelete(record.id)} type='primary' danger>Delete</Button>
+                            <Button onClick={() => handleDelete(record)} type='primary' danger>Delete</Button>
                         </div>
                     </div>
                 )
@@ -68,6 +71,15 @@ function Home() {
                 </Button>
             </Link>
             <Table columns={columns} dataSource={todoList} rowKey='id'></Table>
+            <Link to='/trash'>
+                <Button
+                    className='mt-3'
+                    type='primary'
+                    danger
+                    icon={<DeleteOutlined />}
+                >Trash
+                </Button>
+            </Link>
         </div>
     )
 }
