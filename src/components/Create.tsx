@@ -2,11 +2,12 @@ import {Button, DatePicker} from "antd";
 import React, {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks/stateHook";
 import {addTodo, editTodo} from "../reducers/TodoReducer";
-import {Link, useNavigate, useParams} from "react-router-dom";
+import {Link, NavigateFunction, useNavigate, useParams} from "react-router-dom";
 import {Formik} from "formik";
 import {ICreateFormModel, ITodo} from "../models";
 import {createScheme} from "../schemas/create";
 import dayjs from "dayjs";
+import {Dispatch} from "@reduxjs/toolkit";
 
 type createProps = {
     editing: boolean;
@@ -14,15 +15,15 @@ type createProps = {
 
 function Create({editing}: createProps) {
 
-    const todos = useAppSelector((state) => state.todos)
+    const todos: ITodo[] = useAppSelector((state: {todos: ITodo[], deletedTodos: ITodo[]}) => state.todos)
 
-    const dispatch = useAppDispatch();
-    const navigate = useNavigate();
+    const dispatch: Dispatch = useAppDispatch();
+    const navigate:NavigateFunction = useNavigate();
     const {id} = useParams();
     let selectedTodo: ITodo | undefined = undefined;
 
     if (editing) {
-        const selectedTodoIndex = todos.findIndex(todo => todo.id.toString() === id);
+        const selectedTodoIndex: number = todos.findIndex((todo: ITodo): boolean => todo.id.toString() === id);
         selectedTodo = todos[selectedTodoIndex];
     }
 
@@ -75,7 +76,7 @@ function Create({editing}: createProps) {
                                 <input
                                     onChange={handleChange}
                                     type="text"
-                                    name="title"
+                                    id="title"
                                     className={errors.title ? 'is-invalid form-control' : 'form-control'}
                                     value={values.title}
                                 />
@@ -89,7 +90,7 @@ function Create({editing}: createProps) {
                                 <input
                                     onChange={handleChange}
                                     type="text"
-                                    name="description"
+                                    id="description"
                                     className="form-control"
                                     value={values.description}
                                 />
@@ -100,7 +101,8 @@ function Create({editing}: createProps) {
                                 </label>
                                 <DatePicker
                                     disabledDate={(current) => current && current.valueOf() < Date.now()}
-                                    name="deadline"
+                                    id="deadline"
+                                    showTime
                                     className="form-control"
                                     value={values.deadline ? dayjs(values.deadline) : undefined}
                                     onChange={(date, dateString) =>

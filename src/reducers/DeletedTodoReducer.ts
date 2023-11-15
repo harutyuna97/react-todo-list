@@ -1,7 +1,7 @@
-import {createSlice} from "@reduxjs/toolkit";
+import {createSlice, Slice} from "@reduxjs/toolkit";
 import {deletedTodoList} from "../data-list/deletedTodoData";
 
-const deletedTodoSlice = createSlice({
+const deletedTodoSlice: Slice = createSlice({
     name: 'deletedTodos',
     initialState: deletedTodoList,
     reducers: {

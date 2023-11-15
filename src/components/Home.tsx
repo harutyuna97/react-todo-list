@@ -3,19 +3,29 @@ import {ColumnsType} from "antd/es/table";
 import {ITodo} from "../models";
 import {useAppDispatch, useAppSelector} from "../hooks/stateHook";
 import {Link} from "react-router-dom";
-import {completeTodo, deleteTodo} from "../reducers/TodoReducer";
+import {changeStatus, deleteTodo} from "../reducers/TodoReducer";
 import {addDeletedTodo} from "../reducers/DeletedTodoReducer";
 import {DeleteOutlined} from "@ant-design/icons";
+import {useEffect} from "react";
+import {Dispatch} from "@reduxjs/toolkit";
 
 function Home() {
-
-    const dispatch = useAppDispatch();
 
     const actionsStyles = {
         width: "fit-content",
     };
 
-    const todoList = useAppSelector((state) => state.todos)
+    const dispatch: Dispatch = useAppDispatch();
+
+    const todoList: ITodo[] = useAppSelector((state: {todos: ITodo[], deletedTodos: ITodo[]}) => state.todos)
+
+    useEffect(() => {
+        todoList.forEach((todo: ITodo) => {
+            if (todo.deadline && Date.parse(todo.deadline) < new Date().getTime() && todo.status !== 'OVERDUE') {
+                dispatch(changeStatus({todo, status: 'OVERDUE'}))
+            }
+        })
+    })
 
     const handleDelete = (todo: ITodo) => {
         dispatch(addDeletedTodo(todo))
@@ -23,7 +33,11 @@ function Home() {
     }
 
     const handleMarkAsComplete = (todo: ITodo) => {
-        dispatch(completeTodo(todo))
+        if (todo.deadline && Date.parse(todo.deadline) < new Date().getTime() && todo.status !== 'OVERDUE') {
+            dispatch(changeStatus({todo, status: 'OVERDUE'}))
+        } else {
+            dispatch(changeStatus({todo, status: 'COMPLETED'}))
+        }
     }
 
     const columns: ColumnsType<ITodo> = [
@@ -51,7 +65,7 @@ function Home() {
             title: 'Actions',
             dataIndex: 'actions',
             key: 'actions',
-            render: (text, record) => {
+            render: (text, record: ITodo) => {
                 return (
                     <div>
                         <div style={actionsStyles} className='d-flex justify-content-between gap-2'>
