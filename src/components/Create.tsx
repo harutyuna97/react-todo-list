@@ -47,16 +47,16 @@ function Create({editing}: createProps) {
                         if (editing && selectedTodo) {
                             dispatch(editTodo({
                                 id: selectedTodo.id,
-                                title: values.title,
-                                description: values.description,
+                                title: values.title.trim(),
+                                description: values.description.trim(),
                                 deadline: values.deadline,
                                 status: selectedTodo.status
                             }));
                         } else {
                             dispatch(addTodo({
                                 id: todos.length ? todos[todos.length - 1].id + 1 : 1,
-                                title: values.title,
-                                description: values.description,
+                                title: values.title.trim(),
+                                description: values.description.trim(),
                                 deadline: values.deadline,
                                 status: 'PENDING'
                             }));
