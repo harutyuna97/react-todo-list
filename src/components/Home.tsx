@@ -1,7 +1,8 @@
-import {Button, Flex, Table} from "antd";
+import {Button, Table} from "antd";
 import {ColumnsType} from "antd/es/table";
 import {ITodo} from "../models";
 import {useAppSelector} from "../hooks/stateHook";
+import {Link} from "react-router-dom";
 
 function Home() {
 
@@ -39,10 +40,10 @@ function Home() {
             render: () => {
                 return (
                     <div>
-                        <Flex style={actionsStyles} justify='space-between'>
+                        <div style={actionsStyles} className='d-flex justify-content-between'>
                             <Button type='primary'>Edit</Button>
                             <Button type='primary' danger>Delete</Button>
-                        </Flex>
+                        </div>
                     </div>
                 )
             },
@@ -50,9 +51,13 @@ function Home() {
     ]
 
     return (
-        <div className='container'>
-            <h2>Todo application</h2>
-            <Button type='primary'>Create +</Button>
+        <div className='container mt-5'>
+            <h2 className='my-3'>Todo application</h2>
+            <Link to='/create'>
+                <Button type='primary'>
+                    Create +
+                </Button>
+            </Link>
             <Table columns={columns} dataSource={todoList} rowKey='id'></Table>
         </div>
     )
