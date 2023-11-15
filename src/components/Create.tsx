@@ -1,5 +1,5 @@
 import {Button, DatePicker} from "antd";
-import React from "react";
+import React, {useEffect} from "react";
 import {useAppDispatch, useAppSelector} from "../hooks/stateHook";
 import {addTodo, editTodo} from "../reducers/TodoReducer";
 import {Link, useNavigate, useParams} from "react-router-dom";
@@ -25,6 +25,12 @@ function Create({editing}: createProps) {
         const selectedTodoIndex = todos.findIndex(todo => todo.id.toString() === id);
         selectedTodo = todos[selectedTodoIndex];
     }
+
+    useEffect(() => {
+        if (editing && !selectedTodo) {
+            navigate('/')
+        }
+    })
 
 
     return (
