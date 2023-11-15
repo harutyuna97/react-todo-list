@@ -1,5 +1,3 @@
 import {ITodo} from "../models";
 
-export const todoList: ITodo[] = [
-
-]
+export const todoList: ITodo[] = []
