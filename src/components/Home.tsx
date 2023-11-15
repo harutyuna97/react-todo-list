@@ -23,6 +23,8 @@ function Home() {
         todoList.forEach((todo: ITodo) => {
             if (todo.deadline && Date.parse(todo.deadline) < new Date().getTime() && todo.status !== 'OVERDUE') {
                 dispatch(changeStatus({todo, status: 'OVERDUE'}))
+            } else if (todo.deadline && Date.parse(todo.deadline) > new Date().getTime() && todo.status === 'OVERDUE') {
+                dispatch(changeStatus({todo, status: 'PENDING'}))
             }
         })
     })
