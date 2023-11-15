@@ -2,6 +2,6 @@ export interface ITodo {
     id: string;
     title: string;
     description: string;
-    deadline: Date;
+    deadline: string;
     status: string;
 }
