@@ -7,9 +7,14 @@ const todoSlice = createSlice({
     reducers: {
         addTodo: (state, action) => {
             state.push(action.payload)
+        },
+        editTodo: (state, action) => {
+            const editingTodoId = action.payload.id
+            const editingTodoIndex = state.findIndex(todo => todo.id === editingTodoId)
+            state.splice(editingTodoIndex, 1, action.payload)
         }
     }
 })
 
-export const {addTodo} = todoSlice.actions;
+export const {addTodo, editTodo} = todoSlice.actions;
 export default todoSlice.reducer;

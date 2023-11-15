@@ -1,18 +1,30 @@
 import {Button, DatePicker} from "antd";
 import React from "react";
 import {useAppDispatch, useAppSelector} from "../hooks/stateHook";
-import {addTodo} from "../reducers/TodoReducer";
-import {useNavigate} from "react-router-dom";
+import {addTodo, editTodo} from "../reducers/TodoReducer";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import {Formik} from "formik";
-import {ICreateFormModel} from "../models";
+import {ICreateFormModel, ITodo} from "../models";
 import {createScheme} from "../schemas/create";
+import dayjs from "dayjs";
 
-function Create() {
+type createProps = {
+    editing: boolean;
+}
+
+function Create({editing}: createProps) {
 
     const todos = useAppSelector((state) => state.todos)
 
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
+    const {id} = useParams();
+    let selectedTodo: ITodo | undefined = undefined;
+
+    if (editing) {
+        const selectedTodoIndex = todos.findIndex(todo => todo.id.toString() === id);
+        selectedTodo = todos[selectedTodoIndex];
+    }
 
 
     return (
@@ -20,25 +32,35 @@ function Create() {
             <div className='col-12 col-sm-8 shadow mobile-100 border text-black p-5'>
                 <Formik<ICreateFormModel>
                     initialValues={{
-                        title: '',
-                        description: '',
-                        deadline: ''
+                        title: selectedTodo ? selectedTodo.title : '',
+                        description: selectedTodo ? selectedTodo.description : '',
+                        deadline: selectedTodo ? selectedTodo.deadline : ''
                     }}
                     onSubmit={(values) => {
-                        dispatch(addTodo({
-                            id: todos.length ? todos[todos.length - 1].id + 1 : 1,
-                            title: values.title,
-                            description: values.description,
-                            deadline: values.deadline,
-                            status: 'PENDING'
-                        }));
+                        if (editing && selectedTodo) {
+                            dispatch(editTodo({
+                                id: selectedTodo.id,
+                                title: values.title,
+                                description: values.description,
+                                deadline: values.deadline,
+                                status: selectedTodo.status
+                            }));
+                        } else {
+                            dispatch(addTodo({
+                                id: todos.length ? todos[todos.length - 1].id + 1 : 1,
+                                title: values.title,
+                                description: values.description,
+                                deadline: values.deadline,
+                                status: 'PENDING'
+                            }));
+                        }
                         navigate('/')
                     }}
                     validationSchema={createScheme}
                 >
                     { ({handleSubmit, values, errors, handleChange, setFieldValue}) => (
                         <form onSubmit={handleSubmit}>
-                            <h2>Add new todo</h2>
+                            <h2>{editing ? 'Edit todo' : 'Add new todo'}</h2>
                             <div>
                                 <label
                                     htmlFor="title"
@@ -74,17 +96,25 @@ function Create() {
                                     disabledDate={(current) => current && current.valueOf() < Date.now()}
                                     name="deadline"
                                     className="form-control"
+                                    value={values.deadline ? dayjs(values.deadline) : undefined}
                                     onChange={(date, dateString) =>
                                         setFieldValue("deadline", dateString)
                                     }
                                 />
                             </div>
-                            <div className='mt-3'>
+                            <div className='mt-3 d-flex gap-1'>
                                 <Button
                                     htmlType="submit"
                                     type="primary"
-                                >Create
+                                >{editing ? 'Edit' : 'Create'}
                                 </Button>
+                                <Link to='/'>
+                                    <Button
+                                        htmlType="button"
+                                        type="default"
+                                    >Cancel
+                                    </Button>
+                                </Link>
                             </div>
                         </form>
                     )}

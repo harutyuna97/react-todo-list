@@ -37,11 +37,13 @@ function Home() {
             title: 'Actions',
             dataIndex: 'actions',
             key: 'actions',
-            render: () => {
+            render: (text, record) => {
                 return (
                     <div>
                         <div style={actionsStyles} className='d-flex justify-content-between'>
-                            <Button type='primary'>Edit</Button>
+                            <Link to={`/edit/${record.id}`}>
+                                <Button type='primary'>Edit</Button>
+                            </Link>
                             <Button type='primary' danger>Delete</Button>
                         </div>
                     </div>
