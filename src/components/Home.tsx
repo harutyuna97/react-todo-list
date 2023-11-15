@@ -54,7 +54,7 @@ function Home() {
         <div className='container mt-5'>
             <h2 className='my-3'>Todo application</h2>
             <Link to='/create'>
-                <Button type='primary'>
+                <Button type='primary' className='my-2'>
                     Create +
                 </Button>
             </Link>

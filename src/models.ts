@@ -5,3 +5,9 @@ export interface ITodo {
     deadline: string;
     status: string;
 }
+
+export interface ICreateFormModel {
+    title: string,
+    description: string,
+    deadline: string
+}
