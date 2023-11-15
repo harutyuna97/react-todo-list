@@ -5,7 +5,7 @@ import {Table} from "antd";
 
 function Trash() {
 
-    const deletedTodos = useAppSelector((state) => state.deletedTodos)
+    const deletedTodos: ITodo[] = useAppSelector((state: {todos: ITodo[], deletedTodos: ITodo[]}) => state.deletedTodos)
 
     const columns: ColumnsType<ITodo> = [
         {
