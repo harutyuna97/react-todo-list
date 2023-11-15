@@ -1,5 +1,5 @@
 import {Button, DatePicker} from "antd";
-import React, {useState} from "react";
+import React from "react";
 import {useAppDispatch, useAppSelector} from "../hooks/stateHook";
 import {addTodo} from "../reducers/TodoReducer";
 import {useNavigate} from "react-router-dom";
