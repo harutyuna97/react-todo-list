@@ -1,7 +1,13 @@
 export interface ITodo {
-    id: string;
+    id: number;
     title: string;
     description: string;
     deadline: string;
     status: string;
+}
+
+export interface ICreateFormModel {
+    title: string,
+    description: string,
+    deadline: string
 }
